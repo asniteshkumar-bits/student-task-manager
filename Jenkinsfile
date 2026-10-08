@@ -34,25 +34,23 @@ pipeline {
         }
         stage('Code Quality') {
             steps {
+                withCredentials([
+                string(
+                    credentialsId: 'sonar-token',
+                    variable: 'SONAR_TOKEN'
+                )
+                ]) {
 
-        withCredentials([
-            string(
-                credentialsId: 'sonar-token',
-                variable: 'SONAR_TOKEN'
-            )
-        ]) {
-
-            sh '''
-                export PATH=/opt/sonar-scanner/bin:$PATH
-                sonar-scanner \
-                -Dsonar.host.url=http://localhost:9000 \
-                -Dsonar.token=$SONAR_TOKEN
-            '''
+                sh '''
+                    export PATH=/opt/sonar-scanner/bin:$PATH
+                    sonar-scanner \
+                    -Dsonar.host.url=http://localhost:9000 \
+                    -Dsonar.token=$SONAR_TOKEN
+                '''
+                }
+            }
         }
-    }
-
-        }
-            stage('Deploy') {
+        stage('Deploy') {
             steps {
                 echo 'Deploying application'
 
@@ -79,8 +77,8 @@ pipeline {
                 '''
             }
         }
-     post {
-
+    }
+    post {
         success {
             echo 'CI/CD pipeline completed successfully'
         }
