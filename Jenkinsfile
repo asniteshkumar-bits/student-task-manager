@@ -27,7 +27,7 @@ pipeline {
                 echo 'Running Automated test'
 
                 sh '''
-                    python3 -m pytest
+                    python -m pytest
                 '''
                 
             }
